@@ -184,11 +184,15 @@ $payment.on("change", function() {
 //////////////////////////////////////////////////////////////VALIDATION//////////////////////////////////////////////////////////////////////
 
 function isValidName(name) {
-    return /[a-zA-Z]+/.test(name);
+    return /^[a-zA-Z]+$/.test(name);
+}
+
+function validateName() {
+    let name = $("#name").val();
 }
 
 function isValidEmail(email) {
-    return /^[^@]+@[^@.]+.[a-z]+$/i.test(email);
+    return /^[^@]+@[^@.]+\.[a-z]+$/i.test(email);
 }
 
 function isValidCreditCard(creditCard) {
@@ -199,8 +203,13 @@ function isValidZipCode(zipCode) {
     return /^[0-9]{5}$/.test(zipCode);
 }
 
-function isValidCVV(cvv) {
-    return /^[0-9]{3}$/.test(cvv);
+function isValidCVV(number) {
+    return /^\d{3}$/g;
+}
+
+function reformatCredit(text) {
+    const regex = /^(\d{4})\D*(\d{4})\D*(\d{4})\D*(\d{4})$/g;
+    return text.toString().replace(regex, "$1 $2 $3 $4");
 }
 
 let $name = $("#name").val();
@@ -209,14 +218,42 @@ let $credit_card = $("#cc-num").val();
 let $zip_code = $("#zip").val();
 let $cvv = $("#cvv").val();
 
-$("#name").on("keydown", function() {
-    if (isValidName($name) === false) {
-        console.log("yatta");
-    }
+$("#cc-num").on("blur", function(e) {
+   e.target.value = $("#cc-num").value;
+    console.log(reformatCredit($credit_card));
 });
 
-$("#cvv").on("keydown", function() {
-    if (isValidCVV($cvv) === false) {
-        console.log("yatta");
-    }
+$("#name").on("keyup", function(e) {
+    let regExName = /^[a-zA-Z]+$/;
+    if (!$("#name").val().match(regExName)) {
+        console.log('yatta');
+        }
+});
+
+$("#mail").on("keyup", function(e) {
+    let regExEmail = /^[^@]+@[^@.]+.[a-z]+$/i;
+    if (!$("#mail").val().match(regExEmail)) {
+        console.log('yatta');
+        }
+});
+
+$("#cc-num").on("keyup", function(e) {
+    let regExCard = /^(\d{4})\D*(\d{4})\D*(\d{4})\D*(\d{4})$/;
+    if (!$("#cc-num").val().match(regExCard)) {
+        console.log('yatta');
+        }
+});
+
+$("#zip").on("keyup", function(e) {
+    let regExZip = /^\d{5}$/;
+    if (!$("#zip").val().match(regExZip)) {
+        console.log('yatta');
+        }
+});
+
+$("#cvv").on("keyup", function(e) {
+    let regExCVV = /^\d{3}$/;
+    if (!$("#cvv").val().match(regExCVV)) {
+        console.log('yatta');
+        }
 });
