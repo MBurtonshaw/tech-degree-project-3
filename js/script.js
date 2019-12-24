@@ -35,6 +35,7 @@ $("#title").change(function() {
 function hideShirts() {
     for (let i = 0; i < $options.length; i++) {
         let $defaultDesign = $("#design option").eq(0);
+        let $chosenOption = $options[i];
         $defaultDesign.text("");
         $options[1].remove();
         $options[2].remove();
@@ -89,7 +90,7 @@ $("#design").change(function() {
 /////////////////////////////////////////////////////CALCULATE TOTAL///////////////////////////////////////////////////////////////////////
 
 let dateArray = [];
-let $total =  0;
+let $total = 0;
 
 //Method set up so that for every box checked, an input is added to dateArray and the $total is changed.
 $(".activities input").on("change", function(event) {
@@ -124,20 +125,98 @@ $(".activities input").on("change", function(event) {
     let $totalDiv = "<div id='divCheck'>" + "$" + $total + "</div>";
     $(".activities").append($totalDiv);
 
-    
     /////////////////////////////////////////////////CHECKBOX FUNCTIONALITY////////////////////////////////////////////////////////////////
-    
+
     const $checkboxes = $(".activities input");
     for (let k = 0; k < $checkboxes.length; k++) {
-        
-    if ($check.dataset.dayAndTime.includes("Tuesday 9am-12pm")) {
-           console.log('yatta');
-        } else if ($check.dataset.dayAndTime.includes("Tuesday 1pm-4pm")) {
-            console.log("Yattada");
-        } else if ($check.dataset.dayAndTime.includes("Wednesday 9am-12pm")) {
-                   console.log("yokatta");
-                   } else if ($check.dataset.dayAndTime.includes("Wednesday 1pm-4pm")) {
-                       console.log("It is so");
-                   }
+        let $chosenBox = $checkboxes[k];
+        let $chosenLabel = $(".activities label")[k];
+        let $checkboxData = $chosenBox.dataset.dayAndTime;
+
+        if ($check.dataset.cost < 200) {
+            if ($check.dataset.dayAndTime === $checkboxData) {
+                if ($chosenBox.checked != true) {
+                    $chosenBox.disabled = true;
+                    $chosenLabel.style.color = "red";
+                    if ($check.checked != true) {
+                        $chosenBox.disabled = false;
+                        $chosenLabel.style.color = "";
+                    }
+                }
+            }
+        }
+    }
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////PAYMENT SECTION///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////PAYMENT METHODS//////////////////////////////////////////////////////////////////////
+const $payment = $("#payment");
+
+//Setting default selection as "credit card"
+$("#payment option")
+    .eq(1)
+    .attr("selected", true);
+
+//Initially hiding Paypal & Bitcoin options
+$("#paypal").hide();
+$("#bitcoin").hide();
+
+//Function to hide or show payment options based on selection in dropdown
+$payment.on("change", function() {
+    if ($payment.val() === "credit card") {
+        $("#credit-card").show();
+        $("#paypal").hide();
+        $("#bitcoin").hide();
+    } else if ($payment.val() === "paypal") {
+        $("#credit-card").hide();
+        $("#bitcoin").hide();
+        $("#paypal").show();
+    } else if ($payment.val() === "bitcoin") {
+        $("#credit-card").hide();
+        $("#paypal").hide();
+        $("#bitcoin").show();
+    }
+});
+
+//////////////////////////////////////////////////////////////VALIDATION//////////////////////////////////////////////////////////////////////
+
+function isValidName(name) {
+    return /[a-zA-Z]+/.test(name);
+}
+
+function isValidEmail(email) {
+    return /^[^@]+@[^@.]+.[a-z]+$/i.test(email);
+}
+
+function isValidCreditCard(creditCard) {
+    return /^([0-9]{4})([0-9]{4})([0-9]{4})([0-9]{4})$/.test(creditCard);
+}
+
+function isValidZipCode(zipCode) {
+    return /^[0-9]{5}$/.test(zipCode);
+}
+
+function isValidCVV(cvv) {
+    return /^[0-9]{3}$/.test(cvv);
+}
+
+let $name = $("#name").val();
+let $email = $("#mail").val();
+let $credit_card = $("#cc-num").val();
+let $zip_code = $("#zip").val();
+let $cvv = $("#cvv").val();
+
+$("#name").on("keydown", function() {
+    if (isValidName($name) === false) {
+        console.log("yatta");
+    }
+});
+
+$("#cvv").on("keydown", function() {
+    if (isValidCVV($cvv) === false) {
+        console.log("yatta");
     }
 });
