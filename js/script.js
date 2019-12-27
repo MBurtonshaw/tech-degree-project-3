@@ -331,6 +331,9 @@ $("#cc-num").on("keyup", function(e) {
     ) {
         $cardFlash.show();
         $cardFlash2.hide();
+    } else {
+        $cardFlash.hide();
+        $cardFlash2.hide();
     }
 });
 
