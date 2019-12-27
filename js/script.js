@@ -36,37 +36,33 @@ function hideShirts() {
     for (let i = 0; i < $options.length; i++) {
         let $defaultDesign = $("#design option").eq(0);
         let $chosenOption = $options[i];
-        $defaultDesign.text("");
-        $options[1].remove();
-        $options[2].remove();
-        $options[3].remove();
-        $options[4].remove();
-        $options[5].remove();
-        $options[0].text = "Please select a T-shirt theme";
+        //Removing all options, and hiding the label & dropdown
+        $chosenOption.remove();
+        $("#colors-js-puns").addClass("is-hidden");
     }
 }
 
 //Function to append the shirt options corresponding to "JS puns".
 function showShirts_puns() {
     for (let i = 0; i < $options.length; i++) {
-        //Changing text back from placeholder
-        $options[0].text = "Cornflower Blue (JS Puns shirt only)";
+        //Removing hidden class
+        $("#colors-js-puns").removeClass("is-hidden");
         //Appending correct options
-        $("#color").append($options[0]);
-        $("#color").append($options[1]);
         $("#color").append($options[2]);
+        $("#color").append($options[1]);
+        $("#color").append($options[0]);
     }
 }
 
 //Function to append the shirt options corresponding to "I heart JS".
 function showShirts_love() {
     for (let i = 0; i < $options.length; i++) {
-        //Removing default [0] option.
-        $options[0].remove();
-        //Appending correct options.
-        $("#color").append($options[3]);
-        $("#color").append($options[4]);
+        //Removing hidden class
+        $("#colors-js-puns").removeClass("is-hidden");
+        //Appending correct options
         $("#color").append($options[5]);
+        $("#color").append($options[4]);
+        $("#color").append($options[3]);
     }
 }
 
@@ -89,9 +85,36 @@ $("#design").change(function() {
 
 /////////////////////////////////////////////////////CALCULATE TOTAL///////////////////////////////////////////////////////////////////////
 //
+//Formatting for later use
+const $paypal = document.getElementById("paypal");
+const bitcoin = document.getElementById("bitcoin");
+$paypal.firstElementChild.innerHTML += "<br>";
+bitcoin.firstElementChild.innerHTML += "<br>";
 
 let dateArray = [];
 let $total = 0;
+
+//Flash message for activity validation
+const $activityFlash = $("<span id='activityFlash'></<span>").html(
+    "Please check at least one activity" + "<br>"
+);
+const $activityFlash2 = $("<span id='activityFlash2'></<span>").html(
+    "Please check at least one activity" + "<br>"
+);
+const $activityFlash3 = $("<span id='activityFlash3'></<span>").html(
+    "Please check at least one activity" + "<br>"
+);
+const $unchecked = $("input:checked").length;
+$activityFlash.css("color", "red");
+$activityFlash2.css("color", "red");
+$activityFlash3.css("color", "red");
+$(".col-6").append($activityFlash);
+$("#paypal p").append($activityFlash2);
+$("#bitcoin p").append($activityFlash3);
+$activityFlash.hide();
+$activityFlash2.hide();
+$activityFlash3.hide();
+
 
 //Method set up so that for every box checked, an input is added to dateArray and the $total is changed.
 $(".activities input").on("change", function(event) {
@@ -218,11 +241,7 @@ const $nameFlash2 = $("<span id='nameWarning2'></span").html(
 const $nameFlash3 = $("<span id='nameWarning3'></span").html(
     "Please enter your full name" + "<br>"
 );
-//Formatting for later use
-const $paypal = document.getElementById("paypal");
-const bitcoin = document.getElementById("bitcoin");
-$paypal.firstElementChild.innerHTML += "<br>";
-bitcoin.firstElementChild.innerHTML += "<br>";
+
 //Appending, styling, & hiding variables for later use
 $nameFlash2.css("color", "red");
 $nameFlash3.css("color", "red");
@@ -283,6 +302,7 @@ $("#cardWarning").hide();
 
 //Keyup event for credit card validation
 $("#cc-num").on("keyup", function(e) {
+    //If value doesn't match RegEx, flash message is displayed
     if (
         !$("#cc-num")
             .val()
@@ -303,7 +323,13 @@ function reformatCredit(text) {
 //Blur event to initiate reformatting function
 $("#cc-num").on("blur", function(e) {
     e.target = $("#cc-num");
-    $("#cc-num").val(reformatCredit($("#cc-num").val()));
+    //If no value is entered upon blur event, placeholder is changed
+    if (!$("#cc-num").val()) {
+        $("#cc-num").attr("placeholder", "Please enter a card number");
+        $cardFlash.show();
+    } else {
+        $("#cc-num").val(reformatCredit($("#cc-num").val()));
+    }
 });
 
 //RegEx for zip code input
@@ -329,6 +355,13 @@ $("#zip").on("keyup", function(e) {
     }
 });
 
+//Blur function that changes placeholder if no numbers entered upon blur event
+$("#zip").on("blur", function(e) {
+    if (!$("#zip").val()) {
+        $("#zip").attr("placeholder", "ZIP Required");
+    }
+});
+
 //RegEx for CVV input
 const regExCVV = /^\d{3}$/;
 //Flash message for CVV input, styling, appending, and initial hiding
@@ -349,6 +382,13 @@ $("#cvv").on("keyup", function(e) {
         $cvvFlash.show();
     } else {
         $cvvFlash.hide();
+    }
+});
+
+//Blur event that changes the placeholder if no numbers are entered
+$("#cvv").on("blur", function(e) {
+    if (!$("#cvv").val()) {
+        $("#cvv").attr("placeholder", "CVV Required");
     }
 });
 
@@ -382,6 +422,12 @@ $("button").on("click", function(e) {
         } else {
             $emailFlash.hide();
             $("#mail").css("border-color", "rgb(111, 157, 220)");
+        }
+        if ($unchecked === 0) {
+            e.preventDefault();
+            $activityFlash.show();
+        } else {
+            $activityFlash.hide();
         }
         if (
             !$("#cc-num")
@@ -440,6 +486,12 @@ $("button").on("click", function(e) {
             $emailFlash2.hide();
             $("#mail").css("border-color", "rgb(111, 157, 220)");
         }
+        if (!$unchecked) {
+            e.preventDefault();
+            $activityFlash2.show();
+        } else {
+            $activityFlash2.hide();
+        }
         ////////////////////////////////////////////////////////////////BITCOIN////////////////////////////////////////////////////////////////
         //
     } else if ($("#payment").val() === "bitcoin") {
@@ -467,8 +519,11 @@ $("button").on("click", function(e) {
             $emailFlash3.hide();
             $("#mail").css("border-color", "rgb(111, 157, 220)");
         }
+        if (!$unchecked) {
+            e.preventDefault();
+            $activityFlash3.show();
+        } else {
+            $activityFlash3.hide();
+        }
     }
 });
-
-//Add validation for activities section
-//-Check what's needed for "exceeds"
