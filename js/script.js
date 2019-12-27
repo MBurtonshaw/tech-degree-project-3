@@ -104,7 +104,6 @@ const $activityFlash2 = $("<span id='activityFlash2'></<span>").html(
 const $activityFlash3 = $("<span id='activityFlash3'></<span>").html(
     "Please check at least one activity" + "<br>"
 );
-const $unchecked = $("input:checked").length;
 $activityFlash.css("color", "red");
 $activityFlash2.css("color", "red");
 $activityFlash3.css("color", "red");
@@ -144,6 +143,12 @@ $(".activities input").on("change", function(event) {
         $total -= 100;
         dateArray.pop();
     }
+    
+    if ($total === 0) {
+        $activityFlash.show();
+        } else {
+            $activityFlash.hide();
+        }
 
     //Div is created upon clicking that displays $total.
     let $totalDiv = "<div id='divCheck'>" + "$" + $total + "</div>";
@@ -230,8 +235,10 @@ $("#name").on("keyup", function(e) {
             .match(regExName)
     ) {
         $("#name").css("border-color", "red");
+        $nameFlash.show();
     } else {
         $("#name").css("border-color", "rgb(111, 157, 220)");
+        $nameFlash.hide();
     }
 });
 //Variables for use with Paypal & Bitcoin
@@ -269,8 +276,10 @@ $("#mail").on("keyup", function(e) {
             .match(regExEmail)
     ) {
         $("#mail").css("border-color", "red");
+        $emailFlash.show();
     } else {
         $("#mail").css("border-color", "rgb(111, 157, 220)");
+        $emailFlash.hide();
     }
 });
 //Variables for use with Paypal & Bitcoin
@@ -287,6 +296,8 @@ $("#paypal p").append($emailFlash2);
 $("#bitcoin p").append($emailFlash3);
 $emailFlash2.hide();
 $emailFlash3.hide();
+
+
 
 /////////////////////////////////////////////////////////////////CREDIT CARD///////////////////////////////////////////////////////////////////
 //
@@ -423,7 +434,7 @@ $("button").on("click", function(e) {
             $emailFlash.hide();
             $("#mail").css("border-color", "rgb(111, 157, 220)");
         }
-        if ($unchecked === 0) {
+        if ($total === 0) {
             e.preventDefault();
             $activityFlash.show();
         } else {
@@ -486,11 +497,11 @@ $("button").on("click", function(e) {
             $emailFlash2.hide();
             $("#mail").css("border-color", "rgb(111, 157, 220)");
         }
-        if (!$unchecked) {
+        if ($total === 0) {
             e.preventDefault();
-            $activityFlash2.show();
+            $("#activityFlash2").show();
         } else {
-            $activityFlash2.hide();
+            $("#activityFlash2").hide();
         }
         ////////////////////////////////////////////////////////////////BITCOIN////////////////////////////////////////////////////////////////
         //
@@ -519,11 +530,11 @@ $("button").on("click", function(e) {
             $emailFlash3.hide();
             $("#mail").css("border-color", "rgb(111, 157, 220)");
         }
-        if (!$unchecked) {
+        if ($total === 0) {
             e.preventDefault();
-            $activityFlash3.show();
+            $("#activityFlash3").show();
         } else {
-            $activityFlash3.hide();
+            $("#activityFlash3").hide();
         }
     }
 });
