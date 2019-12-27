@@ -88,6 +88,7 @@ $("#design").change(function() {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////CALCULATE TOTAL///////////////////////////////////////////////////////////////////////
+//
 
 let dateArray = [];
 let $total = 0;
@@ -126,6 +127,7 @@ $(".activities input").on("change", function(event) {
     $(".activities").append($totalDiv);
 
     /////////////////////////////////////////////////CHECKBOX FUNCTIONALITY////////////////////////////////////////////////////////////////
+    //
 
     const $checkboxes = $(".activities input");
     for (let k = 0; k < $checkboxes.length; k++) {
@@ -153,6 +155,7 @@ $(".activities input").on("change", function(event) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////PAYMENT METHODS//////////////////////////////////////////////////////////////////////
+//
 const $payment = $("#payment");
 
 //Setting default selection as "credit card"
@@ -181,69 +184,291 @@ $payment.on("change", function() {
     }
 });
 
-//////////////////////////////////////////////////////////////VALIDATION//////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////VALIDATION SECTION////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function reformatCredit(text) {
-    const regex = /^(\d{4})\D*(\d{4})\D*(\d{4})\D*(\d{4})$/g;
-    return text.toString().replace(regex, "$1 $2 $3 $4");
-}
-
-$("#cc-num").on("blur", function(e) {
-   e.target = $("#cc-num");
-    $("#cc-num").val(reformatCredit($("#cc-num").val()));
-});
-
+////////////////////////////////////////////////////////////////NAME//////////////////////////////////////////////////////////////////////////
+//
+//RegEx for name input
+const regExName = /^[a-z\s]+$/i;
+//Flash warning for credit card section
+const $nameFlash = $("<span id='nameWarning'></span").html(
+    "Please enter your full name" + "<br>"
+);
+$nameFlash.css("color", "red");
+$(".col-6").append($nameFlash);
+$nameFlash.hide();
+//Keyup event for name validation
 $("#name").on("keyup", function(e) {
-    let regExName = /^[a-zA-Z]+$/;
     if (
         !$("#name")
             .val()
             .match(regExName)
     ) {
-        console.log("yatta");
+        $("#name").css("border-color", "red");
+    } else {
+        $("#name").css("border-color", "rgb(111, 157, 220)");
     }
 });
+//Variables for use with Paypal & Bitcoin
+const $nameFlash2 = $("<span id='nameWarning2'></span").html(
+    "Please enter your full name" + "<br>"
+);
+const $nameFlash3 = $("<span id='nameWarning3'></span").html(
+    "Please enter your full name" + "<br>"
+);
+//Formatting for later use
+const $paypal = document.getElementById("paypal");
+const bitcoin = document.getElementById("bitcoin");
+$paypal.firstElementChild.innerHTML += "<br>";
+bitcoin.firstElementChild.innerHTML += "<br>";
+//Appending, styling, & hiding variables for later use
+$nameFlash2.css("color", "red");
+$nameFlash3.css("color", "red");
+$("#paypal p").append($nameFlash2);
+$("#bitcoin p").append($nameFlash3);
+$nameFlash2.hide();
+$nameFlash3.hide();
 
+//////////////////////////////////////////////////////////////////////EMAIL/////////////////////////////////////////////////////////////////
+//
+//RegEx for email input
+const regExEmail = /^[^@]+@[^@.]+.[a-z]+$/i;
+//Flash warning for credit card section
+const $emailFlash = $("<span id='emailWarning'></span").html(
+    "Please enter a valid eMail address" + "<br>"
+);
+$emailFlash.css("color", "red");
+$(".col-6").append($emailFlash);
+$emailFlash.hide();
+//Keyup event for email validation
 $("#mail").on("keyup", function(e) {
-    let regExEmail = /^[^@]+@[^@.]+.[a-z]+$/i;
     if (
         !$("#mail")
             .val()
             .match(regExEmail)
     ) {
-        console.log("yatta");
+        $("#mail").css("border-color", "red");
+    } else {
+        $("#mail").css("border-color", "rgb(111, 157, 220)");
     }
 });
+//Variables for use with Paypal & Bitcoin
+const $emailFlash2 = $("<span id='emailWarning2'></span").html(
+    "Please enter a valid eMail address" + "<br>"
+);
+const $emailFlash3 = $("<span id='emailWarning3'></span").html(
+    "Please enter a valid eMail address" + "<br>"
+);
+//Styling, appending, & hiding variables for later use
+$emailFlash2.css("color", "red");
+$emailFlash3.css("color", "red");
+$("#paypal p").append($emailFlash2);
+$("#bitcoin p").append($emailFlash3);
+$emailFlash2.hide();
+$emailFlash3.hide();
 
+/////////////////////////////////////////////////////////////////CREDIT CARD///////////////////////////////////////////////////////////////////
+//
+//RegEx for credit card input
+const regExCard = /^(\d{4})\D*(\d{4})\D*(\d{4})\D*(\d{4})$/;
+//Flash message for credit card input, styling, appending, and initial hiding
+const $cardFlash = $("<span id='cardWarning'></span").html(
+    "Please enter a valid 16 digit card number" + "<br>"
+);
+$cardFlash.css("color", "red");
+$(".col-6").append($cardFlash);
+$("#cardWarning").hide();
+
+//Keyup event for credit card validation
 $("#cc-num").on("keyup", function(e) {
-    let regExCard = /^(\d{4})\D*(\d{4})\D*(\d{4})\D*(\d{4})$/;
     if (
         !$("#cc-num")
             .val()
             .match(regExCard)
     ) {
-        console.log("yatta");
+        $cardFlash.show();
+    } else {
+        $cardFlash.hide();
     }
 });
 
+//Function to reformat credit card number to "xxxx xxxx xxxx xxxx"
+function reformatCredit(text) {
+    const regex = /^(\d{4})\D*(\d{4})\D*(\d{4})\D*(\d{4})$/g;
+    return text.toString().replace(regex, "$1 $2 $3 $4");
+}
+
+//Blur event to initiate reformatting function
+$("#cc-num").on("blur", function(e) {
+    e.target = $("#cc-num");
+    $("#cc-num").val(reformatCredit($("#cc-num").val()));
+});
+
+//RegEx for zip code input
+const regExZip = /^\d{5}$/;
+//Flash message for zip code input, styling, appending, and initial hiding
+const $zipFlash = $("<span id='zipWarning'></span").html(
+    "Please enter a valid 5 digit ZIP code" + "<br>"
+);
+$zipFlash.css("color", "red");
+$(".col-6").append($zipFlash);
+$("#zipWarning").hide();
+
+//Keyup event for zip code validation
 $("#zip").on("keyup", function(e) {
-    let regExZip = /^\d{5}$/;
     if (
         !$("#zip")
             .val()
             .match(regExZip)
     ) {
-        console.log("yatta");
+        $zipFlash.show();
+    } else {
+        $zipFlash.hide();
     }
 });
 
+//RegEx for CVV input
+const regExCVV = /^\d{3}$/;
+//Flash message for CVV input, styling, appending, and initial hiding
+const $cvvFlash = $("<span id='cvvWarning'></span").html(
+    "Please enter a valid 3 digit CVV" + "<br>"
+);
+$cvvFlash.css("color", "red");
+$(".col-6").append($cvvFlash);
+$("#cvvWarning").hide();
+
+//Keyup event for CVV validation
 $("#cvv").on("keyup", function(e) {
-    let regExCVV = /^\d{3}$/;
     if (
         !$("#cvv")
             .val()
             .match(regExCVV)
     ) {
-        console.log("yatta");
+        $cvvFlash.show();
+    } else {
+        $cvvFlash.hide();
     }
 });
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////SUBMIT BUTTON///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+$("button").on("click", function(e) {
+    ////////////////////////////////////////////////////////////////CREDIT CARD INFO///////////////////////////////////////////////////////////
+    //
+    if ($("#payment").val() === "credit card") {
+        if (
+            !$("#name")
+                .val()
+                .match(regExName)
+        ) {
+            e.preventDefault();
+            $nameFlash.show();
+            $("#name").css("border-color", "red");
+        } else {
+            $nameFlash.hide();
+            $("#name").css("border-color", "rgb(111, 157, 220)");
+        }
+        if (
+            !$("#mail")
+                .val()
+                .match(regExEmail)
+        ) {
+            e.preventDefault();
+            $emailFlash.show();
+            $("#mail").css("border-color", "red");
+        } else {
+            $emailFlash.hide();
+            $("#mail").css("border-color", "rgb(111, 157, 220)");
+        }
+        if (
+            !$("#cc-num")
+                .val()
+                .match(regExCard)
+        ) {
+            e.preventDefault();
+            $cardFlash.show();
+        } else {
+            $cardFlash.hide();
+        }
+        if (
+            !$("#zip")
+                .val()
+                .match(regExZip)
+        ) {
+            e.preventDefault();
+            $zipFlash.show();
+        } else {
+            $zipFlash.hide();
+        }
+        if (
+            !$("#cvv")
+                .val()
+                .match(regExCVV)
+        ) {
+            e.preventDefault();
+            $cvvFlash.show();
+        } else {
+            $cvvFlash.hide();
+        }
+        //////////////////////////////////////////////////////////////PAYPAL///////////////////////////////////////////////////////////////////
+        //
+    } else if ($("#payment").val() === "paypal") {
+        if (
+            !$("#name")
+                .val()
+                .match(regExName)
+        ) {
+            e.preventDefault();
+            $nameFlash2.show();
+            $("#name").css("border-color", "red");
+        } else {
+            $nameFlash2.hide();
+            $("#name").css("border-color", "rgb(111, 157, 220)");
+        }
+        if (
+            !$("#mail")
+                .val()
+                .match(regExEmail)
+        ) {
+            e.preventDefault();
+            $emailFlash2.show();
+            $("#mail").css("border-color", "red");
+        } else {
+            $emailFlash2.hide();
+            $("#mail").css("border-color", "rgb(111, 157, 220)");
+        }
+        ////////////////////////////////////////////////////////////////BITCOIN////////////////////////////////////////////////////////////////
+        //
+    } else if ($("#payment").val() === "bitcoin") {
+        if (
+            !$("#name")
+                .val()
+                .match(regExName)
+        ) {
+            e.preventDefault();
+            $nameFlash3.show();
+            $("#name").css("border-color", "red");
+        } else {
+            $nameFlash3.hide();
+            $("#name").css("border-color", "rgb(111, 157, 220)");
+        }
+        if (
+            !$("#mail")
+                .val()
+                .match(regExEmail)
+        ) {
+            e.preventDefault();
+            $emailFlash3.show();
+            $("#mail").css("border-color", "red");
+        } else {
+            $emailFlash3.hide();
+            $("#mail").css("border-color", "rgb(111, 157, 220)");
+        }
+    }
+});
+
+//Add validation for activities section
+//-Check what's needed for "exceeds"
