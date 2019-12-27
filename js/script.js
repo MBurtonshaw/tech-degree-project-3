@@ -114,7 +114,6 @@ $activityFlash.hide();
 $activityFlash2.hide();
 $activityFlash3.hide();
 
-
 //Method set up so that for every box checked, an input is added to dateArray and the $total is changed.
 $(".activities input").on("change", function(event) {
     //Variable used to call upon $totalDiv, and a conditional statement to see if it exists yet. Deletes clone divs when checking multiple boxes.
@@ -143,12 +142,12 @@ $(".activities input").on("change", function(event) {
         $total -= 100;
         dateArray.pop();
     }
-    
+
     if ($total === 0) {
         $activityFlash.show();
-        } else {
-            $activityFlash.hide();
-        }
+    } else {
+        $activityFlash.hide();
+    }
 
     //Div is created upon clicking that displays $total.
     let $totalDiv = "<div id='divCheck'>" + "$" + $total + "</div>";
@@ -190,6 +189,9 @@ const $payment = $("#payment");
 $("#payment option")
     .eq(1)
     .attr("selected", true);
+$("#payment option")
+    .eq(0)
+    .remove();
 
 //Initially hiding Paypal & Bitcoin options
 $("#paypal").hide();
@@ -297,8 +299,6 @@ $("#bitcoin p").append($emailFlash3);
 $emailFlash2.hide();
 $emailFlash3.hide();
 
-
-
 /////////////////////////////////////////////////////////////////CREDIT CARD///////////////////////////////////////////////////////////////////
 //
 //RegEx for credit card input
@@ -307,21 +307,30 @@ const regExCard = /^(\d{4})\D*(\d{4})\D*(\d{4})\D*(\d{4})$/;
 const $cardFlash = $("<span id='cardWarning'></span").html(
     "Please enter a valid 16 digit card number" + "<br>"
 );
+const $cardFlash2 = $("<span id='cardWarning2'></span").html(
+    "Halfway there!" + "<br>"
+);
 $cardFlash.css("color", "red");
 $(".col-6").append($cardFlash);
+$(".col-6").append($cardFlash2);
 $("#cardWarning").hide();
+$("#cardWarning2").hide();
+$cardFlash2.css("color", "green");
 
 //Keyup event for credit card validation
 $("#cc-num").on("keyup", function(e) {
     //If value doesn't match RegEx, flash message is displayed
-    if (
+    if ($("#cc-num").val().length > 7 && $("#cc-num").val().length < 16) {
+        $cardFlash2.show();
+        $cardFlash.hide();
+    } else if (
         !$("#cc-num")
             .val()
-            .match(regExCard)
+            .match(regExCard) &&
+        $("#cc-num").val().length < 8
     ) {
         $cardFlash.show();
-    } else {
-        $cardFlash.hide();
+        $cardFlash2.hide();
     }
 });
 
@@ -410,6 +419,7 @@ $("button").on("click", function(e) {
     ////////////////////////////////////////////////////////////////CREDIT CARD INFO///////////////////////////////////////////////////////////
     //
     if ($("#payment").val() === "credit card") {
+        $cardFlash2.hide();
         if (
             !$("#name")
                 .val()
