@@ -13,8 +13,8 @@ function changeColor(element, color) {
 //Global Variables
 const $paypal = document.getElementById("paypal");
 const bitcoin = document.getElementById("bitcoin");
-    $paypal.firstElementChild.innerHTML += "<br>";
-    bitcoin.firstElementChild.innerHTML += "<br>";
+$paypal.firstElementChild.innerHTML += "<br>";
+bitcoin.firstElementChild.innerHTML += "<br>";
 const $payment = $("#payment");
 
 //Flash messages for validation
