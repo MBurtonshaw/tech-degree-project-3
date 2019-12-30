@@ -2,6 +2,114 @@
 /////////////////////////////////////////////////////////PROJECT THREE/////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////SOME FUNCTIONS & GLOBAL VARIABLES/////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function changeColor(element, color) {
+    return element.css("color", color);
+}
+
+//Global Variables
+const $paypal = document.getElementById("paypal");
+const bitcoin = document.getElementById("bitcoin");
+    $paypal.firstElementChild.innerHTML += "<br>";
+    bitcoin.firstElementChild.innerHTML += "<br>";
+const $payment = $("#payment");
+
+//Flash messages for validation
+const $nameFlash = $("<span id='nameWarning'></span").html(
+    "Please enter your full name" + "<br>"
+);
+const $nameFlash2 = $("<span id='nameWarning2'></span").html(
+    "Please enter your full name" + "<br>"
+);
+const $nameFlash3 = $("<span id='nameWarning3'></span").html(
+    "Please enter your full name" + "<br>"
+);
+const $emailFlash = $("<span id='emailWarning'></span").html(
+    "Please enter a valid eMail address" + "<br>"
+);
+const $emailFlash2 = $("<span id='emailWarning2'></span").html(
+    "Please enter a valid eMail address" + "<br>"
+);
+const $emailFlash3 = $("<span id='emailWarning3'></span").html(
+    "Please enter a valid eMail address" + "<br>"
+);
+const $activityFlash = $("<span id='activityFlash'></<span>").html(
+    "Please check at least one activity" + "<br>"
+);
+const $activityFlash2 = $("<span id='activityFlash2'></<span>").html(
+    "Please check at least one activity" + "<br>"
+);
+const $activityFlash3 = $("<span id='activityFlash3'></<span>").html(
+    "Please check at least one activity" + "<br>"
+);
+const $cardFlash = $("<span id='cardWarning'></span").html(
+    "Please enter a valid 16 digit card number" + "<br>"
+);
+const $cardFlash2 = $("<span id='cardWarning2'></span").html(
+    "Halfway there!" + "<br>"
+);
+const $zipFlash = $("<span id='zipWarning'></span").html(
+    "Please enter a valid 5 digit ZIP code" + "<br>"
+);
+const $cvvFlash = $("<span id='cvvWarning'></span").html(
+    "Please enter a valid 3 digit CVV" + "<br>"
+);
+
+//Designing & appending flash messages
+changeColor($nameFlash, "red");
+$(".col-6").append($nameFlash);
+changeColor($nameFlash2, "red");
+$("#paypal p").append($nameFlash2);
+changeColor($nameFlash3, "red");
+$("#bitcoin p").append($nameFlash3);
+
+changeColor($emailFlash, "red");
+$(".col-6").append($emailFlash);
+changeColor($emailFlash2, "red");
+$("#paypal p").append($emailFlash2);
+changeColor($emailFlash3, "red");
+$("#bitcoin p").append($emailFlash3);
+
+changeColor($activityFlash, "red");
+$(".col-6").append($activityFlash);
+changeColor($activityFlash2, "red");
+$("#paypal p").append($activityFlash2);
+changeColor($activityFlash3, "red");
+$("#bitcoin p").append($activityFlash3);
+
+changeColor($cardFlash, "red");
+$(".col-6").append($cardFlash);
+changeColor($cardFlash2, "green");
+$(".col-6").append($cardFlash2);
+
+$zipFlash.css("color", "red");
+$(".col-6").append($zipFlash);
+
+changeColor($cvvFlash, "red");
+$(".col-6").append($cvvFlash);
+
+//Hiding flash messages
+$nameFlash.hide();
+$nameFlash2.hide();
+$nameFlash3.hide();
+$emailFlash.hide();
+$emailFlash2.hide();
+$emailFlash3.hide();
+$activityFlash.hide();
+$activityFlash2.hide();
+$activityFlash3.hide();
+$("#cardWarning").hide();
+$("#cardWarning2").hide();
+$("#zipWarning").hide();
+$("#cvvWarning").hide();
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////INITIAL TASKS/////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //Focus on first input upon pageload.
 $("#name").focus();
 
@@ -34,8 +142,7 @@ $("#title").change(function() {
 //Function to remove all shirt color options.
 function hideShirts() {
     for (let i = 0; i < $options.length; i++) {
-        let $defaultDesign = $("#design option").eq(0);
-        let $chosenOption = $options[i];
+        const $chosenOption = $options[i];
         //Removing all options, and hiding the label & dropdown
         $chosenOption.remove();
         $("#colors-js-puns").addClass("is-hidden");
@@ -85,62 +192,32 @@ $("#design").change(function() {
 
 /////////////////////////////////////////////////////CALCULATE TOTAL///////////////////////////////////////////////////////////////////////
 //
-//Formatting for later use
-const $paypal = document.getElementById("paypal");
-const bitcoin = document.getElementById("bitcoin");
-$paypal.firstElementChild.innerHTML += "<br>";
-bitcoin.firstElementChild.innerHTML += "<br>";
 
-let dateArray = [];
 let $total = 0;
-
-//Flash message for activity validation
-const $activityFlash = $("<span id='activityFlash'></<span>").html(
-    "Please check at least one activity" + "<br>"
-);
-const $activityFlash2 = $("<span id='activityFlash2'></<span>").html(
-    "Please check at least one activity" + "<br>"
-);
-const $activityFlash3 = $("<span id='activityFlash3'></<span>").html(
-    "Please check at least one activity" + "<br>"
-);
-$activityFlash.css("color", "red");
-$activityFlash2.css("color", "red");
-$activityFlash3.css("color", "red");
-$(".col-6").append($activityFlash);
-$("#paypal p").append($activityFlash2);
-$("#bitcoin p").append($activityFlash3);
-$activityFlash.hide();
-$activityFlash2.hide();
-$activityFlash3.hide();
 
 //Method set up so that for every box checked, an input is added to dateArray and the $total is changed.
 $(".activities input").on("change", function(event) {
     //Variable used to call upon $totalDiv, and a conditional statement to see if it exists yet. Deletes clone divs when checking multiple boxes.
-    let $divCheck = $("#divCheck");
+    const $divCheck = $("#divCheck");
     if ($divCheck !== null) {
         $divCheck.remove();
     }
 
-    let $check = event.target;
-    let isChecked = $check.checked;
+    const $check = event.target;
+    const isChecked = $check.checked;
     //Conditional statements checking:
     //1: if checkbox has name "all", upon checking 200 is added to total and entry is added to array.
     if ($check.name === "all" && isChecked) {
         $total += 200;
-        dateArray.push($check.name);
         //2: if checkbox had name "all" and is already checked, upon unchecking 200 is deducted from total and entry is deleted from array.
     } else if ($check.name === "all") {
         $total -= 200;
-        dateArray.pop();
         //3: if a checkbox is unchecked, upon checking 100 is added to the total and the entry is added to the array.
     } else if (isChecked) {
         $total += 100;
-        dateArray.push($check.name);
         //4: if a checkbox is already checked, upon unchecking 100 is deducted from total and the entry is deleted from the array.
     } else {
         $total -= 100;
-        dateArray.pop();
     }
 
     if ($total === 0) {
@@ -183,7 +260,6 @@ $(".activities input").on("change", function(event) {
 
 /////////////////////////////////////////////////////PAYMENT METHODS//////////////////////////////////////////////////////////////////////
 //
-const $payment = $("#payment");
 
 //Setting default selection as "credit card"
 $("#payment option")
@@ -222,13 +298,7 @@ $payment.on("change", function() {
 //
 //RegEx for name input
 const regExName = /^[a-z\s]+$/i;
-//Flash warning for credit card section
-const $nameFlash = $("<span id='nameWarning'></span").html(
-    "Please enter your full name" + "<br>"
-);
-$nameFlash.css("color", "red");
-$(".col-6").append($nameFlash);
-$nameFlash.hide();
+
 //Keyup event for name validation
 $("#name").on("keyup", function(e) {
     if (
@@ -243,33 +313,12 @@ $("#name").on("keyup", function(e) {
         $nameFlash.hide();
     }
 });
-//Variables for use with Paypal & Bitcoin
-const $nameFlash2 = $("<span id='nameWarning2'></span").html(
-    "Please enter your full name" + "<br>"
-);
-const $nameFlash3 = $("<span id='nameWarning3'></span").html(
-    "Please enter your full name" + "<br>"
-);
-
-//Appending, styling, & hiding variables for later use
-$nameFlash2.css("color", "red");
-$nameFlash3.css("color", "red");
-$("#paypal p").append($nameFlash2);
-$("#bitcoin p").append($nameFlash3);
-$nameFlash2.hide();
-$nameFlash3.hide();
 
 //////////////////////////////////////////////////////////////////////EMAIL/////////////////////////////////////////////////////////////////
 //
 //RegEx for email input
 const regExEmail = /^[^@]+@[^@.]+.[a-z]+$/i;
-//Flash warning for credit card section
-const $emailFlash = $("<span id='emailWarning'></span").html(
-    "Please enter a valid eMail address" + "<br>"
-);
-$emailFlash.css("color", "red");
-$(".col-6").append($emailFlash);
-$emailFlash.hide();
+
 //Keyup event for email validation
 $("#mail").on("keyup", function(e) {
     if (
@@ -284,38 +333,11 @@ $("#mail").on("keyup", function(e) {
         $emailFlash.hide();
     }
 });
-//Variables for use with Paypal & Bitcoin
-const $emailFlash2 = $("<span id='emailWarning2'></span").html(
-    "Please enter a valid eMail address" + "<br>"
-);
-const $emailFlash3 = $("<span id='emailWarning3'></span").html(
-    "Please enter a valid eMail address" + "<br>"
-);
-//Styling, appending, & hiding variables for later use
-$emailFlash2.css("color", "red");
-$emailFlash3.css("color", "red");
-$("#paypal p").append($emailFlash2);
-$("#bitcoin p").append($emailFlash3);
-$emailFlash2.hide();
-$emailFlash3.hide();
 
 /////////////////////////////////////////////////////////////////CREDIT CARD///////////////////////////////////////////////////////////////////
 //
 //RegEx for credit card input
 const regExCard = /^(\d{4})\D*(\d{4})\D*(\d{4})\D*(\d{4})$/;
-//Flash message for credit card input, styling, appending, and initial hiding
-const $cardFlash = $("<span id='cardWarning'></span").html(
-    "Please enter a valid 16 digit card number" + "<br>"
-);
-const $cardFlash2 = $("<span id='cardWarning2'></span").html(
-    "Halfway there!" + "<br>"
-);
-$cardFlash.css("color", "red");
-$(".col-6").append($cardFlash);
-$(".col-6").append($cardFlash2);
-$("#cardWarning").hide();
-$("#cardWarning2").hide();
-$cardFlash2.css("color", "green");
 
 //Keyup event for credit card validation
 $("#cc-num").on("keyup", function(e) {
@@ -357,13 +379,6 @@ $("#cc-num").on("blur", function(e) {
 
 //RegEx for zip code input
 const regExZip = /^\d{5}$/;
-//Flash message for zip code input, styling, appending, and initial hiding
-const $zipFlash = $("<span id='zipWarning'></span").html(
-    "Please enter a valid 5 digit ZIP code" + "<br>"
-);
-$zipFlash.css("color", "red");
-$(".col-6").append($zipFlash);
-$("#zipWarning").hide();
 
 //Keyup event for zip code validation
 $("#zip").on("keyup", function(e) {
@@ -387,13 +402,6 @@ $("#zip").on("blur", function(e) {
 
 //RegEx for CVV input
 const regExCVV = /^\d{3}$/;
-//Flash message for CVV input, styling, appending, and initial hiding
-const $cvvFlash = $("<span id='cvvWarning'></span").html(
-    "Please enter a valid 3 digit CVV" + "<br>"
-);
-$cvvFlash.css("color", "red");
-$(".col-6").append($cvvFlash);
-$("#cvvWarning").hide();
 
 //Keyup event for CVV validation
 $("#cvv").on("keyup", function(e) {
